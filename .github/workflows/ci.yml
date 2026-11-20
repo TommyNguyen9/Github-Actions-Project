@@ -17,10 +17,7 @@ jobs:
   build:
 
     runs-on: ${{matrix.os}}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-
+   
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 11
@@ -36,6 +33,15 @@ jobs:
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
+
+    - name: Build and Push Docker Image
+      uses: mr-smithers-excellent/docker-build-push@v7
+      with:
+        image: tommy3458/demo-app
+        registry: docker.io
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+              
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
